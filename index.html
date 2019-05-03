@@ -3,18 +3,34 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Search Tester</title>
+    <title>PubMed Search Tester</title>
     <!-- Bootstrap core CSS -->
     <link href="https://getbootstrap.com/docs/4.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
         <!-- Custom styles for this template -->
   </head>
+
   <body>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <a class="navbar-brand" href="">PubTrees</a>
+        <div class="navbar-nav ml-auto">
+          <a class="nav-item nav-link active" href="about.html">About PubMed Search Tester</a>
+        </div>
+      </nav>
+
+<main role="main">
+  <!-- Main jumbotron for a primary marketing message or call to action -->
+  <div id="topbanner" class="jumbotron">
     <div class="container">
+      <h1 class="display-3">PubMed Search Tester</h1>
+    </div>
+  </div>
+
+  <div class="container">
       <div id="mainsearch" class="row">
         <div class="col-md-8">
-          <h2>Your Initial PubMed search</h2>
+          <h3>Your initial search</h3>
           <form class="form-inline">
           <div class="form-group mb-2">
             <input type="text" class="form-control" id="search">
@@ -76,12 +92,12 @@
     <div id="results" class="container">
       <div id="nextsearch" class="row">
         <div class="col-md-8">
-          <h2>Refine your search</h2>
+          <h3>Refine your search</h3>
           <form class="form-inline">
           <div class="form-group mb-2">
             <input type="text" class="form-control" id="refinesearch">
           </div>
-        <button type="button" id="testversion" class="btn btn-primary">Test this version</button>
+        <button type="button" id="testversion" class="btn btn-primary mb-2">Test this version</button>
       </form>
       </div>
     </div>
@@ -118,6 +134,13 @@
         </div>
       </div>
     </div>
+
+  </main>
+
+  <footer class="container">
+    <span class="text-muted">Design and contruction by <a href="https://esperr.github.io/about/">Ed Sperr, M.L.I.S.</a>  |
+      Data from <a href="http://www.ncbi.nlm.nih.gov/">NCBI</a>  |   Visualization tools from  <a href="https://developers.google.com/chart/interactive/docs/gallery/wordtree" target="_blank">Google</a>
+     | See the code at <a href="https://github.com/esperr/pub-trees">GitHub</a></span></footer>
   </body>
   <script>
 
@@ -222,7 +245,7 @@
     $("#testversion").click(function(){
       var searchstr = $("#refinesearch").val();
       var rowcount = $('#searchperformance tr').length;
-      if (rowcount == 3) {
+      if (rowcount == 2) {
         $('#searchperformance').append("<tr><th colspan=4>Results for search variant</th></tr>");
       }
       var goodhits;
@@ -236,11 +259,19 @@
         var badstring = "(" + badDocs.map(pmid => pmid + "[PMID]").join(' OR ') + ")";
         esearch(searchstr + " AND " + badstring)
         .then(function( data ) {
-          badhits = Number(data.esearchresult.count);
+          if (badDocs.length > 0) {
+            badhits = Number(data.esearchresult.count);
+          } else {
+            badhits = 0;
+          }
           var skipstring = "(" + skipDocs.map(pmid => pmid + "[PMID]").join(' OR ') + ")";
           esearch(searchstr + " AND " + skipstring)
           .then(function( data ) {
-            skiphits = Number(data.esearchresult.count) || 0;
+            if (skipDocs.length > 0) {
+              skiphits = Number(data.esearchresult.count);
+            } else {
+              skiphits = 0;
+            }
             searchcount = searchcount + 1;
             var totalsorted = goodhits + badhits + skiphits;
             searches[searchcount] = { "search": searchstr, "screened": totalsorted, "good": goodhits, "bad": badhits };
@@ -464,8 +495,10 @@
      $("#searchperformance").append("<tr>");
      $("#searchperformance tr:last").append("<td>" + search + "</td>");
      $("#searchperformance tr:last").append("<td>" + total + "</td>");
-     $("#searchperformance tr:last").append("<td>" + good + " (" + round(good/total, 3) + ")</td>");
-     $("#searchperformance tr:last").append("<td>" + bad + " (" + round(bad/total, 3) + ")</td>");
+     var goodratio = round(good/total, 3) || 0;
+     $("#searchperformance tr:last").append("<td>" + good + " (" + goodratio + ")</td>");
+     var badratio = round(bad/total, 3) || 0;
+     $("#searchperformance tr:last").append("<td>" + bad + " (" + badratio + ")</td>");
    }
 
    function polulateLists(pmid, status) {
