@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>PubMed Search Tester</title>
+    <link href="pmtest.css" rel="stylesheet">
     <!-- Bootstrap core CSS -->
     <link href="https://getbootstrap.com/docs/4.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
@@ -45,14 +46,16 @@
         </select>
         </div>
       </div>
-      <hr>
     </div>
 
 
     <div id="lists" class="container">
+      <div id="teststeps">
       <button type="button" id="starttest" class="btn btn-primary">Start testing</button>
       <button type="button" id="fetchmore" class="btn btn-outline-secondary">Try sorting more</button>
+      &nbsp;&nbsp;
       <button id="reset" type="button" class="btn btn-outline-danger">Try another search</button>
+     </div>
       <div class="row">
         <div class="col-md-3">
           <h4>Unsorted documents: <span id="mehnumber"></h4>

@@ -1,0 +1,23 @@
+
+#topbanner {
+  background-color: #e0ecff;
+  padding-top: 5em;
+  padding-bottom: 1em;
+  }
+
+.searchword:hover  {
+  background-color: gold;
+}
+
+.optionlabel {
+  margin-bottom: 0em;
+  font-weight: bold;
+}
+
+.card-title {
+  font-weight: bold;
+}
+
+#teststeps {
+  margin-bottom: 2em;
+}
