@@ -545,7 +545,6 @@
      $("#variantperformance tr:last").append("<td style='width:40%'>" + search + "</td>");
      var mysearchstr = "https://www.ncbi.nlm.nih.gov/pubmed?term=" + search;
      $("#variantperformance tr:last").append('<td style="width:15%"><a href="' + mysearchstr + '" target="_pubmedsearch">' + searchtotal + '</a></td>');
-     $("#variantperformance tr:last").append("<td style='width:15%'>" + searchtotal + "</td>");
      $("#variantperformance tr:last").append("<td style='width:15%'>" + totalscreened + "</td>");
      var goodratio = round(good/totalscreened, 3) || 0;
      $("#variantperformance tr:last").append("<td style='width:15%'>" + good + " (" + goodratio + ")</td>");
