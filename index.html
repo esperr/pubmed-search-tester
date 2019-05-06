@@ -14,7 +14,7 @@
 
   <body>
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-        <a class="navbar-brand" href="">PubTrees</a>
+        <a class="navbar-brand" href="">PubMed Search Tester</a>
         <div class="navbar-nav ml-auto">
           <a class="nav-item nav-link active" href="about.html">About PubMed Search Tester</a>
         </div>
@@ -34,7 +34,7 @@
           <h3>Your initial search</h3>
           <form class="form-inline">
           <div class="form-group mb-2">
-            <input type="text" class="form-control" id="search">
+            <input type="text" class="form-control" id="search" size="40">
           </div>
           <button id="runsearch" class="btn btn-primary mb-2" type="button">Search</button>
         </form>
@@ -91,7 +91,6 @@
         </div>
       </div>
 
-      <hr>
 
     </div>
 
@@ -101,20 +100,31 @@
           <h3>Refine your search</h3>
           <form class="form-inline">
           <div class="form-group mb-2">
-            <input type="text" class="form-control" id="refinesearch">
+            <input type="text" class="form-control" id="refinesearch" size="40">
           </div>
         <button type="button" id="testversion" class="btn btn-primary mb-2">Test this version</button>
       </form>
       </div>
     </div>
       <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-10">
         <table class="table table-striped" id="searchperformance">
           <tr>
-            <th scope="col">Initial Search</th>
-            <th scope="col">Number screened</th>
-            <th scope="col">Good cites (Ratio)</th>
-            <th scope="col">Bad cites (Ratio)</th>
+            <th scope="col" style="width:40%">Initial Search</th>
+            <th scope="col" style="width:15%">Total found</th>
+            <th scope="col" style="width:15%">Number screened</th>
+            <th scope="col" style="width:15%">Good cites (Ratio)</th>
+            <th scope="col" style="width:15%">Bad cites (Ratio)</th>
+          </tr>
+        </table>
+
+        <table class="table table-striped" id="variantperformance">
+          <tr>
+            <th scope="col" style="width:40%">Search variant</th>
+            <th scope="col" style="width:15%">Total found</th>
+            <th scope="col" style="width:15%">Found from screened set</th>
+            <th scope="col" style="width:15%">Good cites found(Ratio)</th>
+            <th scope="col" style="width:15%">Bad cites found(Ratio)</th>
           </tr>
         </table>
       </div>
@@ -144,9 +154,10 @@
   </main>
 
   <footer class="container">
+    <hr>
     <span class="text-muted">Design and contruction by <a href="https://esperr.github.io/about/">Ed Sperr, M.L.I.S.</a>  |
-      Data from <a href="http://www.ncbi.nlm.nih.gov/">NCBI</a>  |   Visualization tools from  <a href="https://developers.google.com/chart/interactive/docs/gallery/wordtree" target="_blank">Google</a>
-     | See the code at <a href="https://github.com/esperr/pub-trees">GitHub</a></span></footer>
+      Data from <a href="http://www.ncbi.nlm.nih.gov/">NCBI</a>
+     | See the code at <a href="https://github.com/esperr/pubmed-search-tester">GitHub</a></span></footer>
   </body>
   <script>
 
@@ -219,7 +230,6 @@
     });
 
    $("#starttest").click(function(){
-      $("#lists").hide;
       /*
       epost(goodDocs)
       .done(function( xml ) {
@@ -244,33 +254,38 @@
       }
       */
       $("#lists").hide();
+      $("#variantperformance").hide();
       $("#results").show();
       var searchstr = $("#search").val();
       var totalsorted = goodDocs.length + badDocs.length + skipDocs.length;
       searches["start"] = { "search": searchstr, "screened": totalsorted, "good": goodDocs.length, "bad": badDocs.length };
-      writeResults(searchstr, totalsorted, goodDocs.length, badDocs.length);
+      writeResults(searchstr, startCount, totalsorted, goodDocs.length, badDocs.length);
       searchcount = 0;
     });
 
     $("#testversion").click(function(){
-      var searchstr = $("#refinesearch").val();
-      var rowcount = $('#searchperformance tr').length;
-      if (rowcount == 2) {
-        $('#searchperformance').append("<tr><th colspan=4>Results by search variant</th></tr>");
+      if($('#variantperformance').is(':hidden')){
+        $("#variantperformance").show();
       }
+      var searchstr = $("#refinesearch").val();
+      var rowcount = $('#variantperformance tr').length;
       var goodhits;
       var badhits;
       var skiphits;
       var goodstring = "(" + goodDocs.map(pmid => pmid + "[PMID]").join(' OR ') + ")";
-      console.log(goodDocs);
-      console.log(goodstring);
+      //console.log(goodDocs);
+      //console.log(goodstring);
+      esearch(searchstr)
+      .then(function( data ) {
+        totalsearch = Number(data.esearchresult.count);
+        console.log(totalsearch);
       esearch(searchstr + " AND " + goodstring)
       .then(function( data ) {
         goodhits = Number(data.esearchresult.count);
-        console.log(goodhits);
+        //console.log(goodhits);
         var badstring = "(" + badDocs.map(pmid => pmid + "[PMID]").join(' OR ') + ")";
-        console.log(badDocs);
-        console.log(badstring);
+        //console.log(badDocs);
+        //console.log(badstring);
         esearch(searchstr + " AND " + badstring)
         .then(function( data ) {
           if (badDocs.length > 0) {
@@ -279,8 +294,8 @@
             badhits = 0;
           }
           var skipstring = "(" + skipDocs.map(pmid => pmid + "[PMID]").join(' OR ') + ")";
-          console.log(skipDocs);
-          console.log(skipstring);
+          //console.log(skipDocs);
+          //console.log(skipstring);
           esearch(searchstr + " AND " + skipstring)
           .then(function( data ) {
             if (skipDocs.length > 0) {
@@ -291,11 +306,12 @@
             searchcount = searchcount + 1;
             var totalsorted = goodhits + badhits + skiphits;
             searches[searchcount] = { "search": searchstr, "screened": totalsorted, "good": goodhits, "bad": badhits };
-            writeResults(searchstr, totalsorted, goodhits, badhits);
+            writeVarResults(searchstr, totalsearch, totalsorted, goodhits, badhits);
           });
         });
       });
      });
+    });
 
    $("#judge-doc button").click(function(){
      var mingood = $( "#minimumgood option:selected" ).val();
@@ -462,6 +478,9 @@
      var myDoc = startDocs[pmid];
      $("#judge-doc").modal();
      $("#currentstatus").text(myDoc.sortstatus);
+     if (myDoc.sortstatus == "Unsorted") { $("#currentstatus").attr("style", "color:gray;") }
+     if (myDoc.sortstatus == "Bad") { $("#currentstatus").attr("style", "color:red;") }
+     if (myDoc.sortstatus == "Good") { $("#currentstatus").attr("style", "color:green;") }
      $("#doc-display").append('<div class="sievedoc"></div>');
      $(".sievedoc").append('<h2 class="doctitle" data-pmid=' + pmid + '>' + myDoc.title + '</h2>');
      var issuestring = '<em>' + myDoc.journalTitle + '</em>';
@@ -478,6 +497,8 @@
      var authorstring = myDoc.authors.join(', ');
      $(".sievedoc").append('<p>' + authorstring + '</p>');
      $(".sievedoc").append('<p>' + myDoc.abstract + '</p>');
+     $(".sievedoc").append('<p id="pubmedlink">PMID: <a href="https://www.ncbi.nlm.nih.gov/pubmed/' + pmid + '" target="_pubmedlink">' + pmid + '</a></p>');
+
    }
 
    function fetchunsorted() {
@@ -507,14 +528,29 @@
      $("#skipnumber").text(skipDocs.length);
    }
 
-   function writeResults(search, total, good, bad) {
+   function writeResults(search, searchtotal, totalscreened, good, bad) {
      $("#searchperformance").append("<tr>");
-     $("#searchperformance tr:last").append("<td>" + search + "</td>");
-     $("#searchperformance tr:last").append("<td>" + total + "</td>");
-     var goodratio = round(good/total, 3) || 0;
-     $("#searchperformance tr:last").append("<td>" + good + " (" + goodratio + ")</td>");
-     var badratio = round(bad/total, 3) || 0;
-     $("#searchperformance tr:last").append("<td>" + bad + " (" + badratio + ")</td>");
+     $("#searchperformance tr:last").append("<td style='width:40%'>" + search + "</td>");
+     var mysearchstr = "https://www.ncbi.nlm.nih.gov/pubmed?term=" + search;
+     $("#searchperformance tr:last").append('<td style="width:15%"><a href="' + mysearchstr + '" target="_pubmedsearch">' + searchtotal + '</a></td>');
+     $("#searchperformance tr:last").append("<td style='width:15%'>" + totalscreened + "</td>");
+     var goodratio = round(good/totalscreened, 3) || 0;
+     $("#searchperformance tr:last").append("<td style='width:15%'>" + good + " (" + goodratio + ")</td>");
+     var badratio = round(bad/totalscreened, 3) || 0;
+     $("#searchperformance tr:last").append("<td style='width:15%'>" + bad + " (" + badratio + ")</td>");
+   }
+
+   function writeVarResults(search, searchtotal, totalscreened, good, bad) {
+     $("#variantperformance").append("<tr>");
+     $("#variantperformance tr:last").append("<td style='width:40%'>" + search + "</td>");
+     var mysearchstr = "https://www.ncbi.nlm.nih.gov/pubmed?term=" + search;
+     $("#variantperformance tr:last").append('<td style="width:15%"><a href="' + mysearchstr + '" target="_pubmedsearch">' + searchtotal + '</a></td>');
+     $("#variantperformance tr:last").append("<td style='width:15%'>" + searchtotal + "</td>");
+     $("#variantperformance tr:last").append("<td style='width:15%'>" + totalscreened + "</td>");
+     var goodratio = round(good/totalscreened, 3) || 0;
+     $("#variantperformance tr:last").append("<td style='width:15%'>" + good + " (" + goodratio + ")</td>");
+     var badratio = round(bad/totalscreened, 3) || 0;
+     $("#variantperformance tr:last").append("<td style='width:15%'>" + bad + " (" + badratio + ")</td>");
    }
 
    function polulateLists(pmid, status) {

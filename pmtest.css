@@ -21,3 +21,13 @@
 #teststeps {
   margin-bottom: 2em;
 }
+
+#footer {
+  margin-top: 4em;
+}
+
+#doc-display {
+  margin-left: 3em;
+  margin-right: 3em;
+  line-height: 1.2;
+}
