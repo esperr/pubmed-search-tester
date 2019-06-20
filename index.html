@@ -73,8 +73,8 @@
           <div class="card">
             <div class="card-body">
               <h5 class="card-title">2) Sort your Cites</h5>
-              <p class="card-text">Examine a random sample of the citations returned by your search and sort them into "Good" and "Bad" piles until you are done. This will make up
-                your validation set with which to test your search(es).</p>
+              <p class="card-text">Examine a random sample of the citations returned by your search and sort them into "Good" and "Bad" piles until you are done.</p>
+               <p>These good citations will make up a <em>validation set</em> with which to test your search(es).</p>
             </div>
           </div>
         </div>
@@ -82,8 +82,9 @@
           <div class="card">
             <div class="card-body">
               <h5 class="card-title">3) Test your Search(es)</h5>
-              <p class="card-text">Compare your initial search to your validation set to quatify how well it performed. Use that <em>same</em>
-              validation set to test successive iterations of your initial search until you get it dialled into where you want it.</p>
+              <p class="card-text">Compare your initial search to your validation set to quantify how well it performed.</p>
+              <p>Use that <em>same</em> validation set to test successive iterations of your initial search until you get it dialled
+                into where you want it.</p>
             </div>
           </div>
         </div>
@@ -274,29 +275,6 @@
     });
 
    $("#starttest").click(function(){
-      /*
-      epost(goodDocs)
-      .done(function( xml ) {
-        $(xml).find('ePostResult').each(function(){
-          goodWebEnv = $(this).find("WebEnv").text();
-          console.log(goodWebEnv);
-        });
-      });
-      epost(badDocs)
-      .done(function( xml ) {
-        $(xml).find('ePostResult').each(function(){
-          badWebEnv = $(this).find("WebEnv").text();
-        });
-      });
-      if (skipDocs.length > 0) {
-        epost(skipDocs)
-        .done(function( xml ) {
-          $(xml).find('ePostResult').each(function(){
-            skipWebEnv = $(this).find("WebEnv").text();
-          });
-        });
-      }
-      */
       $("#lists").hide();
       $("#variantperformance").hide();
       $("#results").show();
@@ -317,8 +295,6 @@
       var badhits;
       var skiphits;
       var goodstring = "(" + goodDocs.map(pmid => pmid + "[PMID]").join(' OR ') + ")";
-      //console.log(goodDocs);
-      //console.log(goodstring);
       esearch(searchstr)
       .then(function( data ) {
         totalsearch = Number(data.esearchresult.count);
@@ -326,10 +302,7 @@
       esearch(searchstr + " AND " + goodstring)
       .then(function( data ) {
         goodhits = Number(data.esearchresult.count);
-        //console.log(goodhits);
         var badstring = "(" + badDocs.map(pmid => pmid + "[PMID]").join(' OR ') + ")";
-        //console.log(badDocs);
-        //console.log(badstring);
         esearch(searchstr + " AND " + badstring)
         .then(function( data ) {
           if (badDocs.length > 0) {
@@ -338,8 +311,6 @@
             badhits = 0;
           }
           var skipstring = "(" + skipDocs.map(pmid => pmid + "[PMID]").join(' OR ') + ")";
-          //console.log(skipDocs);
-          //console.log(skipstring);
           esearch(searchstr + " AND " + skipstring)
           .then(function( data ) {
             if (skipDocs.length > 0) {
@@ -385,21 +356,6 @@
      });
    }
 
-   /*
-   function epost(array) {
-      ids = array.join(',');
-      return $.ajax({
-        url: 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/epost.fcgi',
-        data: {
-          db: 'pubmed',
-          id: ids,
-          email: 'ed_sperr@hotmail.com',
-          tool: 'searchtest',
-          api_key: 'f069cf776feaa627ab9b1e0fc2b090610708'
-        }
-        });
-   }
-   */
    function esearch(term) {
       pausetime = performance.now();
       return $.ajax({
@@ -416,27 +372,6 @@
         }
         });
    }
-
-   /*
-   function testsearch(webenv, term) {
-    console.log("fired!");
-    return $.ajax({
-        url: 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi',
-        data: {
-          db: 'pubmed',
-          usehistory: 'y',
-          term: term,
-          query_key: 1,
-          WebEnv: webenv,
-          rettype: 'uilist',
-          retmode: 'json',
-          email: 'ed_sperr@hotmail.com',
-          tool: 'searchtest',
-          api_key: 'f069cf776feaa627ab9b1e0fc2b090610708'
-        }
-      });
-   }
-   */
 
    function efetch(index) {
       pausetime = performance.now();
@@ -630,7 +565,6 @@
     var multiplier = Math.pow(10, precision || 0);
     return Math.round(value * multiplier) / multiplier;
   }
-
 
  })
  ();
