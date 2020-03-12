@@ -1,0 +1,568 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Testing the PubMed Search Tester</title>
+    <link href="pmtest.css" rel="stylesheet">
+    <!-- Bootstrap core CSS -->
+    <link href="https://getbootstrap.com/docs/4.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <!-- Custom styles for this template -->
+  </head>
+
+  <body>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <a class="navbar-brand" href="">Testing the PubMed Search Tester</a>
+        <div class="navbar-nav ml-auto">
+        </div>
+      </nav>
+
+<main role="main">
+  <!-- Main jumbotron for a primary marketing message or call to action -->
+  <div id="topbanner" class="jumbotron">
+    <div class="container">
+      <h1 class="display-3">Testing the PubMed Search Tester</h1>
+    </div>
+  </div>
+
+  <div class="container" id="mainsearch">
+      <div class="row">
+        <div class="col-md-8">
+          <h3>Your initial search</h3>
+          <div id="search">
+          </div>
+          <button id="runsearch" class="btn btn-primary mb-2" type="button">Search</button>
+        <!--Minimum number of "good" articles to select:
+        <select id="minimumgood">
+          <option value="10">10</option>
+          <option value="20">20</option>
+          <option value="40">40</option>
+        </select>-->
+        </div>
+      </div>
+      <br /><br />
+      <div class="row">
+        <div class="col-md-10">
+        <h4>How it works...</h4>
+
+        </div>
+        </div>
+    </div>
+
+
+    <div id="lists" class="container">
+
+      <div id="teststeps">
+      <button type="button" id="fetchmore" class="btn btn-outline-secondary">Try sorting more</button>
+      </div>
+      <div class="row">
+        <div class="col-md-3">
+          <h4>Unsorted documents: <span id="mehnumber"></h4>
+            <a data-toggle="collapse" href="#sievelist" aria-expanded="false" aria-controls="collapseExample">
+              Show all
+            </a>
+          <ul class="collapse" id="sievelist">
+          </ul>
+        </div>
+        <div class="col-md-3">
+          <h4>"Good" documents: <span id="goodnumber">0</h4>
+            <a data-toggle="collapse" href="#goodlist" aria-expanded="false" aria-controls="collapseExample">
+              Show all
+            </a>
+          <ul class="collapse" id="goodlist">
+          </ul>
+        </div>
+        <div class="col-md-3">
+          <h4>"Bad" documents: <span id="badnumber">0</h4>
+            <a data-toggle="collapse" href="#badlist" aria-expanded="false" aria-controls="collapseExample">
+              Show all
+            </a>
+          <ul class="collapse" id="badlist">
+          </ul>
+        </div>
+        <div class="col-md-3">
+          <h4>Skipped documents: <span id="skipnumber">0</h4>
+            <a data-toggle="collapse" href="#skippedlist" aria-expanded="false" aria-controls="collapseExample">
+              Show all
+            </a>
+          <ul class="collapse" id="skippedlist">
+          </ul>
+        </div>
+      </div>
+
+
+    </div>
+
+    <div id="results" class="container">
+      <div id="nextsearch" class="row">
+        <div class="col-md-8">
+          <h3>Refine your search</h3>
+          <form class="form-inline">
+          <div class="form-group mb-2">
+            <input type="text" class="form-control" id="refinesearch" size="40">
+          </div>
+        <button type="button" id="testversion" class="btn btn-primary mb-2">Test this version</button>
+      </form>
+      </div>
+    </div>
+      <div class="row">
+        <div class="col-md-10">
+        <table class="table table-striped" id="searchperformance">
+          <tr>
+            <th scope="col" style="width:40%">Initial Search</th>
+            <th scope="col" style="width:15%">Total found</th>
+            <th scope="col" style="width:15%">Number screened</th>
+            <th scope="col" style="width:15%">Good cites (Ratio)</th>
+            <th scope="col" style="width:15%">Bad cites (Ratio)</th>
+          </tr>
+        </table>
+
+        <table class="table table-striped" id="variantperformance">
+          <tr>
+            <th scope="col" style="width:40%">Search variant</th>
+            <th scope="col" style="width:15%">Total found</th>
+            <th scope="col" style="width:15%">Found from screened set</th>
+            <th scope="col" style="width:15%">Good cites found(Ratio)</th>
+            <th scope="col" style="width:15%">Bad cites found(Ratio)</th>
+          </tr>
+        </table>
+      </div>
+      </div>
+
+  </div>
+
+
+
+    <div id="judge-doc" class="modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Curent status: <span id="currentstatus"></span></h4>
+          </div>
+          <div id="doc-display" class="modal-body">
+          </div>
+          <div class="modal-footer">
+              <button type="button" id="markbad" class="btn btn btn-danger">← Bad</button>
+              <button type="button" id="markmeh" class="btn btn-light">↑ Skip</button>
+              <button type="button" id="markgood" class="btn btn-success">→ Good</button>
+        </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="container">
+    <hr>
+    <span class="text-muted">Design and contruction by <a href="https://esperr.github.io/about/">Ed Sperr, M.L.I.S.</a>  |
+      Data from <a href="http://www.ncbi.nlm.nih.gov/">NCBI</a>
+     | See the code at <a href="https://github.com/esperr/pubmed-search-tester">GitHub</a></span></footer>
+  </body>
+  <script>
+
+  (function() {
+
+  var startDocs = {};
+  var pausetime = performance.now();
+  var startWebEnv;
+  var startCount;
+  //var goodWebEnv;
+  //var badWebEnv;
+  //var skipWebEnv;
+  var searches = {};
+  var searchcount;
+  var sieveDocs = [];
+  var skipDocs = [];
+  var goodDocs = [];
+  var badDocs = [];
+  var currenttest = 0;
+  var mingood = 5;
+  var alltests = { survey: {}, tests: {} };
+
+  var testsearches = [
+    {search: "type 2 diabetes drugs review",
+    rubric: "A rubric will go here. It will be many lines and have many \
+    important things to say"}
+  ];
+
+
+  $("#lists").hide();
+  $("#results").hide();
+  populatesearch(currenttest);
+
+//  $(document).keydown(function(e) {
+//    if(e.keyCode == 13) {
+//      //Because both IE and FF now "helpfully" ignore the spec and treat 'button' the same as 'submit'
+//      e.preventDefault();
+//      if($('#mainsearch').is(':visible')){
+//        $( "#runsearch" ).trigger( "click" );
+//      }
+//      if($('#nextsearch').is(':visible')){
+//        $( "#testversion" ).trigger( "click" );
+//      }
+//    }
+//  });
+
+  $("#judge-doc").keydown(function(e) {
+    if(e.key == "ArrowLeft") {
+      $( "#markbad" ).trigger( "click" );
+    }
+    if(e.key == "ArrowUp") {
+      $( "#markmeh" ).trigger( "click" );
+    }
+    if(e.key == "ArrowRight") {
+      $( "#markgood" ).trigger( "click" );
+    }
+  });
+
+  $("#runsearch").click(function(){
+     $("#mainsearch").hide();
+     $("#lists").show();
+     var searchstr = testsearches[currenttest].search
+     startSearch(searchstr);
+   });
+
+   $("#fetchmore").click(function(){
+     getDoc(20);
+     fetchunsorted();
+    });
+
+   $( "#lists" ).on( "click", "li", function() {
+     var selecteddoc = $(this).attr("data-pmid");
+     showDoc(selecteddoc);
+   });
+
+   $( ".row" ).on( "click", "#reset", function() {
+       location.replace(location.pathname);
+    });
+
+   $("#starttest").click(function(){
+      $("#lists").hide();
+      $("#variantperformance").hide();
+      $("#results").show();
+      var searchstr = $("#search").val();
+      var totalsorted = goodDocs.length + badDocs.length + skipDocs.length;
+      searches["start"] = { "search": searchstr, "screened": totalsorted, "good": goodDocs.length, "bad": badDocs.length };
+      writeResults(searchstr, startCount, totalsorted, goodDocs.length, badDocs.length);
+      searchcount = 0;
+    });
+
+    $("#testversion").click(function(){
+      if($('#variantperformance').is(':hidden')){
+        $("#variantperformance").show();
+      }
+      var searchstr = $("#refinesearch").val();
+      var rowcount = $('#variantperformance tr').length;
+      var goodhits;
+      var badhits;
+      var skiphits;
+      var goodstring = "(" + goodDocs.map(pmid => pmid + "[PMID]").join(' OR ') + ")";
+      esearch(searchstr)
+      .then(function( data ) {
+        totalsearch = Number(data.esearchresult.count);
+        console.log(totalsearch);
+      esearch(searchstr + " AND " + goodstring)
+      .then(function( data ) {
+        goodhits = Number(data.esearchresult.count);
+        var badstring = "(" + badDocs.map(pmid => pmid + "[PMID]").join(' OR ') + ")";
+        esearch(searchstr + " AND " + badstring)
+        .then(function( data ) {
+          if (badDocs.length > 0) {
+            badhits = Number(data.esearchresult.count);
+          } else {
+            badhits = 0;
+          }
+          var skipstring = "(" + skipDocs.map(pmid => pmid + "[PMID]").join(' OR ') + ")";
+          esearch(searchstr + " AND " + skipstring)
+          .then(function( data ) {
+            if (skipDocs.length > 0) {
+              skiphits = Number(data.esearchresult.count);
+            } else {
+              skiphits = 0;
+            }
+            searchcount = searchcount + 1;
+            var totalsorted = goodhits + badhits + skiphits;
+            searches[searchcount] = { "search": searchstr, "screened": totalsorted, "good": goodhits, "bad": badhits };
+            writeVarResults(searchstr, totalsearch, totalsorted, goodhits, badhits);
+          });
+        });
+      });
+     });
+    });
+
+   $("#judge-doc button").click(function(){
+     if (goodDocs.length >= mingood) {
+       $("#judge-doc").modal('hide');
+       doneTesting();
+     } else {
+       var selecteddoc = $( "#judge-doc .doctitle" ).attr("data-pmid");
+       if ($(this).attr("id") == "markgood") { startDocs[selecteddoc].sortstatus = "Good" }
+       if ($(this).attr("id") == "markmeh") { startDocs[selecteddoc].sortstatus = "Skipped" }
+       if ($(this).attr("id") == "markbad") { startDocs[selecteddoc].sortstatus = "Bad" }
+       if (sieveDocs.length < 3) {
+         getDoc(10);
+       }
+       updateLists();
+       fetchunsorted();
+     }
+    });
+
+   function populatesearch(currenttest) {
+     var mytest = testsearches[currenttest];
+     $( "#search" ).append( mytest.search );
+   }
+
+   function startSearch(term) {
+     esearch(term)
+     .then(function( data ) {
+       startWebEnv = data.esearchresult.webenv;
+       startCount = data.esearchresult.count;
+       getDoc(40);
+       fetchunsorted();
+     });
+   }
+
+   function esearch(term) {
+      pausetime = performance.now();
+      return $.ajax({
+        url: 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi',
+        data: {
+          db: 'pubmed',
+          usehistory: 'y',
+          term: term,
+          retmode: 'json',
+          retmax: 0,
+          email: 'ed_sperr@hotmail.com',
+          tool: 'searchtest',
+          api_key: 'f069cf776feaa627ab9b1e0fc2b090610708'
+        }
+        });
+   }
+
+   function efetch(index) {
+      pausetime = performance.now();
+      return $.ajax({
+        url: 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi',
+        data: {
+          db: 'pubmed',
+          retstart: index,
+          retmax: 1,
+          query_key: 1,
+          WebEnv: startWebEnv,
+          retmode: 'xml',
+          rettype: 'abstract',
+          email: 'ed_sperr@hotmail.com',
+          tool: 'searchtest',
+          api_key: 'f069cf776feaa627ab9b1e0fc2b090610708'
+        }
+      });
+   }
+
+   function getDoc(numrequired) {
+     var indexes = [];
+     var currentmeh = Number($("#mehnumber").text());
+     $("#mehnumber").text(currentmeh + numrequired);
+     for (i = 0; i < numrequired; i++) {
+       var index = getRandomIntInclusive(1, startCount);
+       indexes.push(index);
+     }
+     var uniqueindexes = indexes.filter( onlyUnique );
+     for (i = 0; i < numrequired; i++)  {
+       checktime();
+       function checktime() {
+         var t1 = performance.now();
+         var timediff = t1 - pausetime;
+         if (timediff > 500) {
+           callutils();
+         } else {
+           setTimeout(checktime, 50);
+         }
+       }
+       function callutils() {
+         var myDoc = {};
+         var index = indexes.pop();
+         efetch(index)
+         .done(function( xml ) {
+           var authors = [];
+           $(xml).find('PubmedArticle').each(function(){
+             myDoc.pmid = $(this).find("PMID:first").text();
+             if (startDocs[myDoc.pmid]) {
+               console.log("We already have this one...")
+             } else {
+               myDoc.title = $(this).find("ArticleTitle").text();
+               myDoc.abstract = $(this).find("AbstractText").text();
+               var journal = $(this).find("Journal");
+               myDoc.journalTitle = journal.find("Title").text();
+               var journalIssue = journal.find("JournalIssue");
+               myDoc.volume = journalIssue.find("Volume").text();
+               myDoc.issue = journalIssue.find("Issue").text();
+               var journalDate = journalIssue.find("PubDate");
+               myDoc.year = journalDate.find("Year").text();
+               myDoc.month = journalDate.find("Month").text();
+               myDoc.day = journalDate.find("Day").text();
+               myDoc.medlinedate = journalDate.find("MedlineDate").text();
+               myDoc.pages = $(this).find("MedlinePgn").text();
+               $(this).find('Author').each(function(){
+                 var lastname = $(this).find("LastName").text();
+                 var intials = $(this).find("Initials").text();
+                 authors.push(lastname + " " + intials)
+               });
+               myDoc.authors = authors;
+               myDoc.sortstatus = "Unsorted";
+               startDocs[myDoc.pmid] = myDoc;
+               sieveDocs.push(myDoc.pmid);
+           }
+         });
+        });
+       }
+     }
+   }
+
+   function showDoc(pmid) {
+     $("#doc-display").empty();
+     var myDoc = startDocs[pmid];
+     $("#judge-doc").modal();
+     $("#currentstatus").text(myDoc.sortstatus);
+     if (myDoc.sortstatus == "Unsorted") { $("#currentstatus").attr("style", "color:gray;") }
+     if (myDoc.sortstatus == "Bad") { $("#currentstatus").attr("style", "color:red;") }
+     if (myDoc.sortstatus == "Good") { $("#currentstatus").attr("style", "color:green;") }
+     $("#doc-display").append('<div class="sievedoc"></div>');
+     $(".sievedoc").append('<h2 class="doctitle" data-pmid=' + pmid + '>' + myDoc.title + '</h2>');
+     var issuestring = '<em>' + myDoc.journalTitle + '</em>';
+     if (myDoc.year == "") { issuestring = issuestring + " " + myDoc.medlinedate }
+     else {
+       issuestring = issuestring + " " + myDoc.year + " " + myDoc.month + " " + myDoc.day;
+     }
+     issuestring = issuestring.trim() + "; "
+     issuestring = issuestring + myDoc.volume;
+     if (myDoc.issue !== "") { issuestring = issuestring + " (" + myDoc.issue + ") " }
+     issuestring = issuestring.trim() + ": "
+     issuestring = issuestring + myDoc.pages;
+     $(".sievedoc").append('<p>' + issuestring + '</p>');
+     var authorstring = myDoc.authors.join(', ');
+     $(".sievedoc").append('<p>' + authorstring + '</p>');
+     $(".sievedoc").append('<p>' + myDoc.abstract + '</p>');
+     $(".sievedoc").append('<p id="pubmedlink">PMID: <a href="https://www.ncbi.nlm.nih.gov/pubmed/' + pmid + '" target="_pubmedlink">' + pmid + '</a></p>');
+
+   }
+
+   function fetchunsorted() {
+     if (sieveDocs.length > 0) {
+       showDoc(sieveDocs[getRandomIntInclusive(0, sieveDocs.length-1)]);
+     } else {
+       setTimeout(fetchunsorted, 50);
+     }
+   }
+
+   function updateLists() {
+     $("#sievelist").empty();
+     sieveDocs.length = 0;
+     $("#goodlist").empty();
+     goodDocs.length = 0;
+     $("#badlist").empty();
+     badDocs.length = 0;
+     $("#skippedlist").empty();
+     skipDocs.length = 0;
+     var pmids = Object.keys(startDocs)
+     for (var i=0; i<pmids.length; i++) {
+       polulateLists(pmids[i], startDocs[pmids[i]].sortstatus);
+     }
+     $("#mehnumber").text(sieveDocs.length);
+     $("#goodnumber").text(goodDocs.length);
+     $("#badnumber").text(badDocs.length);
+     $("#skipnumber").text(skipDocs.length);
+   }
+
+   function writeResults(search, searchtotal, totalscreened, good, bad) {
+     $("#searchperformance").append("<tr>");
+     $("#searchperformance tr:last").append("<td style='width:40%'>" + search + "</td>");
+     var mysearchstr = "https://www.ncbi.nlm.nih.gov/pubmed?term=" + search;
+     $("#searchperformance tr:last").append('<td style="width:15%"><a href="' + mysearchstr + '" target="_pubmedsearch">' + searchtotal + '</a></td>');
+     $("#searchperformance tr:last").append("<td style='width:15%'>" + totalscreened + "</td>");
+     var goodratio = round(good/totalscreened, 3) || 0;
+     $("#searchperformance tr:last").append("<td style='width:15%'>" + good + " (" + goodratio + ")</td>");
+     var badratio = round(bad/totalscreened, 3) || 0;
+     $("#searchperformance tr:last").append("<td style='width:15%'>" + bad + " (" + badratio + ")</td>");
+   }
+
+   function writeVarResults(search, searchtotal, totalscreened, good, bad) {
+     $("#variantperformance").append("<tr>");
+     $("#variantperformance tr:last").append("<td style='width:40%'>" + search + "</td>");
+     var mysearchstr = "https://www.ncbi.nlm.nih.gov/pubmed?term=" + search;
+     $("#variantperformance tr:last").append('<td style="width:15%"><a href="' + mysearchstr + '" target="_pubmedsearch">' + searchtotal + '</a></td>');
+     $("#variantperformance tr:last").append("<td style='width:15%'>" + totalscreened + "</td>");
+     var goodratio = round(good/totalscreened, 3) || 0;
+     $("#variantperformance tr:last").append("<td style='width:15%'>" + good + " (" + goodratio + ")</td>");
+     var badratio = round(bad/totalscreened, 3) || 0;
+     $("#variantperformance tr:last").append("<td style='width:15%'>" + bad + " (" + badratio + ")</td>");
+   }
+
+   function polulateLists(pmid, status) {
+     if (status == "Unsorted") {
+       sieveDocs.push(pmid);
+       listname = "sievelist";
+     }
+     if (status == "Good") {
+       goodDocs.push(pmid);
+       listname = "goodlist";
+     }
+     if (status == "Bad") {
+       badDocs.push(pmid);
+       listname = "badlist";
+     }
+     if (status == "Skipped") {
+       skipDocs.push(pmid);
+       listname = "skippedlist";
+     }
+     $("#" + listname).append('<li data-pmid=' + pmid + '>' + startDocs[pmid].title  + "</li>");
+   }
+
+   function doneTesting() {
+     alert("done!");
+     var searchstr = testsearches[currenttest].search
+     alltests["tests"][searchstr] = {};
+     alltests["tests"][searchstr]["good"] = goodDocs;
+     alltests["tests"][searchstr]["bad"] = badDocs;
+     alltests["tests"][searchstr]["skipped"] = skipDocs;
+     console.log(JSON.stringify(alltests));
+     currenttest = currenttest + 1;
+     console.log(currenttest);
+     console.log(testsearches.length);
+     if (currenttest == testsearches.length) {
+       alert("all done!!!!");
+       $("#lists").hide();
+     } else {
+       var startDocs = {};
+       updateLists();
+       console.log(startDocs);
+       populatesearch(currenttest);
+     }
+   }
+
+
+
+  function getRandomIntInclusive(min, max) {
+     min = Math.ceil(min);
+     max = Math.floor(max);
+     return Math.floor(Math.random() * (max - min + 1)) + min;
+   }
+
+  function onlyUnique(value, index, self) {
+     return self.indexOf(value) === index;
+  }
+
+  function round(value, precision) {
+    var multiplier = Math.pow(10, precision || 0);
+    return Math.round(value * multiplier) / multiplier;
+  }
+
+ })
+ ();
+
+</script>
+
+  </html>
