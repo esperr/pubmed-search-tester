@@ -2,18 +2,10 @@
 <html lang="en">
   <head>
     <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-433406-16"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'UA-433406-16');
-    </script>
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>PubMed Search Tester</title>
+    <title>Testing the PubMed Search Tester</title>
     <link href="pmtest.css" rel="stylesheet">
     <!-- Bootstrap core CSS -->
     <link href="https://getbootstrap.com/docs/4.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -24,9 +16,8 @@
 
   <body>
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-        <a class="navbar-brand" href="">PubMed Search Tester</a>
+        <a class="navbar-brand" href="">Testing the PubMed Search Tester</a>
         <div class="navbar-nav ml-auto">
-          <a class="nav-item nav-link active" href="about.html">About PubMed Search Tester</a>
         </div>
       </nav>
 
@@ -34,7 +25,7 @@
   <!-- Main jumbotron for a primary marketing message or call to action -->
   <div id="topbanner" class="jumbotron">
     <div class="container">
-      <h1 class="display-3">PubMed Search Tester</h1>
+      <h1 class="display-3">Testing the PubMed Search Tester</h1>
     </div>
   </div>
 
@@ -42,65 +33,32 @@
       <div class="row">
         <div class="col-md-8">
           <h3>Your initial search</h3>
-          <form class="form-inline">
-          <div class="form-group mb-2">
-            <input type="text" class="form-control" id="search" size="40">
+          <div id="search">
           </div>
           <button id="runsearch" class="btn btn-primary mb-2" type="button">Search</button>
-        </form>
-        Minimum number of "good" articles to select:
+        <!--Minimum number of "good" articles to select:
         <select id="minimumgood">
           <option value="10">10</option>
           <option value="20">20</option>
           <option value="40">40</option>
-        </select>
+        </select>-->
         </div>
       </div>
       <br /><br />
       <div class="row">
         <div class="col-md-10">
         <h4>How it works...</h4>
-        <div class="row">
-        <div class="col-md-4">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">1) Search your Terms</h5>
-              <p class="card-text">Search with any PubMed search terms you like. You can use anything from a couple of keywords to the most complex search you can manage.</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">2) Sort your Cites</h5>
-              <p class="card-text">Examine a random sample of the citations returned by your search and sort them into "Good" and "Bad" piles until you are done.</p>
-               <p>These good citations will make up a <em>validation set</em> with which to test your search(es).</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">3) Test your Search(es)</h5>
-              <p class="card-text">Compare your initial search to your validation set to quantify how well it performed.</p>
-              <p>Use that <em>same</em> validation set to test successive iterations of your initial search until you get it dialled
-                into where you want it.</p>
-            </div>
-          </div>
-        </div>
-        </div>
+
         </div>
         </div>
     </div>
 
 
     <div id="lists" class="container">
+
       <div id="teststeps">
-      <button type="button" id="starttest" class="btn btn-primary">Start testing</button>
       <button type="button" id="fetchmore" class="btn btn-outline-secondary">Try sorting more</button>
-      &nbsp;&nbsp;
-      <button id="reset" type="button" class="btn btn-outline-danger">Try another search</button>
-     </div>
+      </div>
       <div class="row">
         <div class="col-md-3">
           <h4>Unsorted documents: <span id="mehnumber"></h4>
@@ -221,25 +179,33 @@
   var skipDocs = [];
   var goodDocs = [];
   var badDocs = [];
+  var currenttest = 0;
+  var mingood = 5;
+  var alltests = { survey: {}, tests: {} };
 
-
+  var testsearches = [
+    {search: "type 2 diabetes drugs review",
+    rubric: "A rubric will go here. It will be many lines and have many \
+    important things to say"}
+  ];
 
 
   $("#lists").hide();
   $("#results").hide();
+  populatesearch(currenttest);
 
-  $(document).keydown(function(e) {
-    if(e.keyCode == 13) {
-      //Because both IE and FF now "helpfully" ignore the spec and treat 'button' the same as 'submit'
-      e.preventDefault();
-      if($('#mainsearch').is(':visible')){
-        $( "#runsearch" ).trigger( "click" );
-      }
-      if($('#nextsearch').is(':visible')){
-        $( "#testversion" ).trigger( "click" );
-      }
-    }
-  });
+//  $(document).keydown(function(e) {
+//    if(e.keyCode == 13) {
+//      //Because both IE and FF now "helpfully" ignore the spec and treat 'button' the same as 'submit'
+//      e.preventDefault();
+//      if($('#mainsearch').is(':visible')){
+//        $( "#runsearch" ).trigger( "click" );
+//      }
+//      if($('#nextsearch').is(':visible')){
+//        $( "#testversion" ).trigger( "click" );
+//      }
+//    }
+//  });
 
   $("#judge-doc").keydown(function(e) {
     if(e.key == "ArrowLeft") {
@@ -256,7 +222,7 @@
   $("#runsearch").click(function(){
      $("#mainsearch").hide();
      $("#lists").show();
-     var searchstr = $("#search").val();
+     var searchstr = testsearches[currenttest].search
      startSearch(searchstr);
    });
 
@@ -329,10 +295,9 @@
     });
 
    $("#judge-doc button").click(function(){
-     var mingood = $( "#minimumgood option:selected" ).val();
      if (goodDocs.length >= mingood) {
        $("#judge-doc").modal('hide');
-       alert("All sorted!");
+       doneTesting();
      } else {
        var selecteddoc = $( "#judge-doc .doctitle" ).attr("data-pmid");
        if ($(this).attr("id") == "markgood") { startDocs[selecteddoc].sortstatus = "Good" }
@@ -345,6 +310,11 @@
        fetchunsorted();
      }
     });
+
+   function populatesearch(currenttest) {
+     var mytest = testsearches[currenttest];
+     $( "#search" ).append( mytest.search );
+   }
 
    function startSearch(term) {
      esearch(term)
@@ -550,6 +520,30 @@
      }
      $("#" + listname).append('<li data-pmid=' + pmid + '>' + startDocs[pmid].title  + "</li>");
    }
+
+   function doneTesting() {
+     alert("done!");
+     var searchstr = testsearches[currenttest].search
+     alltests["tests"][searchstr] = {};
+     alltests["tests"][searchstr]["good"] = goodDocs;
+     alltests["tests"][searchstr]["bad"] = badDocs;
+     alltests["tests"][searchstr]["skipped"] = skipDocs;
+     console.log(JSON.stringify(alltests));
+     currenttest = currenttest + 1;
+     console.log(currenttest);
+     console.log(testsearches.length);
+     if (currenttest == testsearches.length) {
+       alert("all done!!!!");
+       $("#lists").hide();
+     } else {
+       var startDocs = {};
+       updateLists();
+       console.log(startDocs);
+       populatesearch(currenttest);
+     }
+   }
+
+
 
   function getRandomIntInclusive(min, max) {
      min = Math.ceil(min);
