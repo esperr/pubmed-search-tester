@@ -15,13 +15,17 @@
 }
 
 .card-title {
-  font-weight: bold;
+  font-weight: 600;
 }
 
 #teststeps {
   margin-bottom: 2em;
 }
 
+#teststats {
+  margin-top: 2em;
+  font-size: .9em
+}
 #footer {
   margin-top: 4em;
 }
@@ -29,5 +33,29 @@
 #doc-display {
   margin-left: 3em;
   margin-right: 3em;
-  line-height: 1.2;
+  line-height: 1.3;
+}
+
+.docabstract {
+  margin-top: 1em;
+}
+
+.listarticle {
+  line-height: 1;
+  font-size: .9em;
+  margin-bottom: .5em;
+}
+
+.listarticle:hover {
+  color: blue;
+  border-color: blue;
+  box-shadow: 5px 5px 5px lightgray;
+}
+
+#doc-display .card-subtitle {
+  font-size: 1.1em  
+}
+
+#currentstatus {
+  font-weight: 600;
 }
