@@ -40,56 +40,57 @@
 
   <div class="container" id="mainsearch">
       <div class="row">
-        <div class="col-md-8">
-          <h3>Your initial search</h3>
+        <div class="col-md-7">
+          <div class="card mb-3">
+            <div class="card-body">
           <form class="form-inline">
           <div class="form-group mb-2">
             <input type="text" class="form-control" id="search" size="40">
           </div>
           <button id="runsearch" class="btn btn-primary mb-2" type="button">Search</button>
         </form>
-        Minimum number of "good" articles to select:
+        Minimum number of "good" items in validation set:
         <select id="minimumgood">
           <option value="10">10</option>
           <option value="20">20</option>
           <option value="40">40</option>
         </select>
-        </div>
       </div>
-      <br /><br />
-      <div class="row">
-        <div class="col-md-10">
-        <h4>How it works...</h4>
-        <div class="row">
-        <div class="col-md-4">
-          <div class="card">
+    </div>
+        <div class="alert alert-light alert-dismissible fade show" role="alert">
+           <strong>Hint:</strong> a broad initial search will make it easier to test multiple approaches.
+        </div>
+        </div>
+        <div class="col-md-5">
+          <div class="card mb-3">
             <div class="card-body">
-              <h5 class="card-title">1) Search your Terms</h5>
-              <p class="card-text">Search with any PubMed search terms you like. You can use anything from a couple of keywords to the most complex search you can manage.</p>
+              <div class="card-title">1) Start the process</div>
+              <p class="card-text">Search using any PubMed search terms you like &mdash; from a couple of keywords to the most complex search you can manage.</p>
             </div>
           </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card">
+
+          <div class="card mb-3">
             <div class="card-body">
-              <h5 class="card-title">2) Sort your Cites</h5>
-              <p class="card-text">Examine a random sample of the citations returned by your search and sort them into "Good" and "Bad" piles until you are done. This will make up
-                your validation set with which to test your search(es).</p>
+              <div class="card-title">2) Sort your Cites</div>
+              <p class="card-text">Examine a random sample of the citations returned by your search and sort them into "Good" and "Bad" piles. Good items will make up
+                your validation set!</p>
             </div>
           </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card">
+
+          <div class="card mb-3">
             <div class="card-body">
-              <h5 class="card-title">3) Test your Search(es)</h5>
-              <p class="card-text">Compare your initial search to your validation set to quatify how well it performed. Use that <em>same</em>
-              validation set to test successive iterations of your initial search until you get it dialled into where you want it.</p>
+              <div class="card-title">3) Test your Searches</div>
+              <p class="card-text">PubMed Search tester now uses that validation set to <strong>automatically</strong> test successive iterations of your search strategy
+                until you are satisfied with the balance of <em>sensitivity</em> and <em>precision</em>.</p>
             </div>
           </div>
+
         </div>
-        </div>
-        </div>
-        </div>
+
+      </div>
+
+
+
     </div>
 
 
@@ -100,38 +101,45 @@
       &nbsp;&nbsp;
       <button id="reset" type="button" class="btn btn-outline-danger">Try another search</button>
      </div>
+     <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+        Not sure if you picked correctly? Choose an item below to see details and change its sort status.
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+     </div>
       <div class="row">
-        <div class="col-md-3">
+
+        <!--<div class="col-md-3">
           <h4>Unsorted documents: <span id="mehnumber"></h4>
             <a data-toggle="collapse" href="#sievelist" aria-expanded="false" aria-controls="collapseExample">
               Show all
             </a>
-          <ul class="collapse" id="sievelist">
-          </ul>
-        </div>
-        <div class="col-md-3">
+          <div class="collapse" id="sievelist">
+          </div>
+        </div>-->
+        <div class="col-md-4">
           <h4>"Good" documents: <span id="goodnumber">0</h4>
-            <a data-toggle="collapse" href="#goodlist" aria-expanded="false" aria-controls="collapseExample">
+            <!--<a data-toggle="collapse" href="#goodlist" aria-expanded="false" aria-controls="collapseExample">
               Show all
-            </a>
-          <ul class="collapse" id="goodlist">
-          </ul>
+            </a>-->
+          <div id="goodlist">
+          </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
           <h4>"Bad" documents: <span id="badnumber">0</h4>
-            <a data-toggle="collapse" href="#badlist" aria-expanded="false" aria-controls="collapseExample">
+            <!--<a data-toggle="collapse" href="#badlist" aria-expanded="false" aria-controls="collapseExample">
               Show all
-            </a>
-          <ul class="collapse" id="badlist">
-          </ul>
+            </a>-->
+          <div id="badlist">
+          </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
           <h4>Skipped documents: <span id="skipnumber">0</h4>
-            <a data-toggle="collapse" href="#skippedlist" aria-expanded="false" aria-controls="collapseExample">
+            <!--<a data-toggle="collapse" href="#skippedlist" aria-expanded="false" aria-controls="collapseExample">
               Show all
-            </a>
-          <ul class="collapse" id="skippedlist">
-          </ul>
+            </a>-->
+          <div id="skippedlist">
+          </div>
         </div>
       </div>
 
@@ -150,11 +158,11 @@
       </form>
       </div>
     </div>
-      <div class="row">
-        <div class="col-md-10">
-        <table class="table table-striped" id="searchperformance">
+      <div id="teststats" class="row">
+        <div class="col-md-12">
+        <table class="table table-striped" id="initialsearchperformance">
           <tr>
-            <th scope="col" style="width:40%">Initial Search</th>
+            <th scope="col" style="width:30%">Initial Search</th>
             <th scope="col" style="width:15%">Total found</th>
             <th scope="col" style="width:15%">Number screened</th>
             <th scope="col" style="width:15%">Good cites (Ratio)</th>
@@ -164,13 +172,19 @@
 
         <table class="table table-striped" id="variantperformance">
           <tr>
-            <th scope="col" style="width:40%">Search variant</th>
-            <th scope="col" style="width:15%">Total found</th>
-            <th scope="col" style="width:15%">Found from screened set</th>
-            <th scope="col" style="width:15%">Good cites found(Ratio)</th>
-            <th scope="col" style="width:15%">Bad cites found(Ratio)</th>
+            <th scope="col" style="width:30%">Test search</th>
+            <th scope="col" style="width:10%">Total found</th>
+            <th scope="col" style="width:10%">Good cites found</th>
+            <th scope="col" style="width:10%">Good cites missed</th>
+            <th scope="col" style="width:10%">Sensitivity</th>
+            <th scope="col" style="width:10%">Bad cites found</th>
+            <th scope="col" style="width:10%">Precision</th>
+
           </tr>
         </table>
+        <div class="alert alert-light" role="alert">
+          See the <a href="about.html#calculations" class="alert-link">about page</a> for details about how sensitivity and precision are calculated.
+        </div>
       </div>
       </div>
 
@@ -264,8 +278,13 @@
      fetchunsorted();
     });
 
-   $( "#lists" ).on( "click", "li", function() {
-     var selecteddoc = $(this).attr("data-pmid");
+   //$( "#lists" ).on( "click", "li", function() {
+  //   var selecteddoc = $(this).attr("data-pmid");
+  //   showDoc(selecteddoc);
+   ///});
+
+   $( "#lists" ).on( "click", ".card", function() {
+     var selecteddoc = $(this).attr("id");
      showDoc(selecteddoc);
    });
 
@@ -358,19 +377,19 @@
     });
 
    $("#judge-doc button").click(function(){
+     var selecteddoc = $( "#judge-doc .doctitle" ).attr("data-pmid");
+     if ($(this).attr("id") == "markgood") { startDocs[selecteddoc].sortstatus = "Good" }
+     if ($(this).attr("id") == "markmeh") { startDocs[selecteddoc].sortstatus = "Skipped" }
+     if ($(this).attr("id") == "markbad") { startDocs[selecteddoc].sortstatus = "Bad" }
+     updateLists();
      var mingood = $( "#minimumgood option:selected" ).val();
      if (goodDocs.length >= mingood) {
        $("#judge-doc").modal('hide');
        alert("All sorted!");
      } else {
-       var selecteddoc = $( "#judge-doc .doctitle" ).attr("data-pmid");
-       if ($(this).attr("id") == "markgood") { startDocs[selecteddoc].sortstatus = "Good" }
-       if ($(this).attr("id") == "markmeh") { startDocs[selecteddoc].sortstatus = "Skipped" }
-       if ($(this).attr("id") == "markbad") { startDocs[selecteddoc].sortstatus = "Bad" }
        if (sieveDocs.length < 3) {
          getDoc(10);
        }
-       updateLists();
        fetchunsorted();
      }
     });
@@ -492,6 +511,7 @@
                myDoc.abstract = $(this).find("AbstractText").text();
                var journal = $(this).find("Journal");
                myDoc.journalTitle = journal.find("Title").text();
+               myDoc.journalAbbreviation = journal.find("ISOAbbreviation").text();
                var journalIssue = journal.find("JournalIssue");
                myDoc.volume = journalIssue.find("Volume").text();
                myDoc.issue = journalIssue.find("Issue").text();
@@ -526,23 +546,42 @@
      if (myDoc.sortstatus == "Bad") { $("#currentstatus").attr("style", "color:red;") }
      if (myDoc.sortstatus == "Good") { $("#currentstatus").attr("style", "color:green;") }
      $("#doc-display").append('<div class="sievedoc"></div>');
-     $(".sievedoc").append('<h2 class="doctitle" data-pmid=' + pmid + '>' + myDoc.title + '</h2>');
-     var issuestring = '<em>' + myDoc.journalTitle + '</em>';
-     if (myDoc.year == "") { issuestring = issuestring + " " + myDoc.medlinedate }
+     $(".sievedoc").append('<h4 class="card-title doctitle" data-pmid=' + pmid + '>' + myDoc.title + '</h4>');
+     var citestring = '<em>' + myDoc.journalTitle + '</em>. ' + formatIssuestring(startDocs[pmid]);
+     var myauthorstring = formatAuthorstring( myDoc.authors, 4);
+     if (myauthorstring.trim().length != 0 ) {
+       citestring = myauthorstring + '. ' + citestring;
+     }
+     $(".sievedoc").append('<div class="card-subtitle mb-2 text-muted">' + citestring + '</div>');
+     $(".sievedoc").append('<p class="docabstract">' + myDoc.abstract + '</p>');
+     $(".sievedoc").append('<p id="pubmedlink">PMID: <a href="https://www.ncbi.nlm.nih.gov/pubmed/' + pmid + '" target="_pubmedlink">' + pmid + '</a></p>');
+
+   }
+
+   function formatIssuestring(myDoc) {
+     if (myDoc.year == "") { var issuestring = myDoc.medlinedate }
      else {
-       issuestring = issuestring + " " + myDoc.year + " " + myDoc.month + " " + myDoc.day;
+       var issuestring = myDoc.year + " " + myDoc.month + " " + myDoc.day;
      }
      issuestring = issuestring.trim() + "; "
      issuestring = issuestring + myDoc.volume;
      if (myDoc.issue !== "") { issuestring = issuestring + " (" + myDoc.issue + ") " }
      issuestring = issuestring.trim() + ": "
      issuestring = issuestring + myDoc.pages;
-     $(".sievedoc").append('<p>' + issuestring + '</p>');
-     var authorstring = myDoc.authors.join(', ');
-     $(".sievedoc").append('<p>' + authorstring + '</p>');
-     $(".sievedoc").append('<p>' + myDoc.abstract + '</p>');
-     $(".sievedoc").append('<p id="pubmedlink">PMID: <a href="https://www.ncbi.nlm.nih.gov/pubmed/' + pmid + '" target="_pubmedlink">' + pmid + '</a></p>');
+     return issuestring;
+   }
 
+   function formatAuthorstring(authors, authornumber) {
+     if (authors[0] == "") {
+       return;
+     } else {
+       if (authors.length > authornumber) {
+         var myauthors = authors.splice(0,authornumber-1).join(', ') + ", et al";
+       } else {
+         var myauthors = authors.join(', ');
+       }
+       return myauthors;
+     }
    }
 
    function fetchunsorted() {
@@ -573,27 +612,39 @@
    }
 
    function writeResults(search, searchtotal, totalscreened, good, bad) {
-     $("#searchperformance").append("<tr>");
-     $("#searchperformance tr:last").append("<td style='width:40%'>" + search + "</td>");
+     $("#initialsearchperformance").append("<tr id='startsearch'>");
+     $("#startsearch").append("<td style='width:40%'>" + search + "</td>");
      var mysearchstr = "https://www.ncbi.nlm.nih.gov/pubmed?term=" + search;
-     $("#searchperformance tr:last").append('<td style="width:15%"><a href="' + mysearchstr + '" target="_pubmedsearch">' + searchtotal + '</a></td>');
-     $("#searchperformance tr:last").append("<td style='width:15%'>" + totalscreened + "</td>");
+     $("#startsearch").append('<td style="width:15%"><a href="' + mysearchstr + '" target="_pubmedsearch">' + searchtotal + '</a></td>');
+     $("#startsearch").append("<td style='width:15%'>" + totalscreened + "</td>");
      var goodratio = round(good/totalscreened, 3) || 0;
-     $("#searchperformance tr:last").append("<td style='width:15%'>" + good + " (" + goodratio + ")</td>");
+     var goodstring = "(" + goodDocs.map(pmid => pmid + "[PMID]").join(' OR ') + ")";
+     var thesegoods = "https://www.ncbi.nlm.nih.gov/pubmed?term=" + goodstring;
+     $("#startsearch").append('<td style="width:15%"><a href="' + thesegoods + '" target="_pubmedsearch">' + good + " (" + goodratio + ")</td>");
      var badratio = round(bad/totalscreened, 3) || 0;
-     $("#searchperformance tr:last").append("<td style='width:15%'>" + bad + " (" + badratio + ")</td>");
+     var badstring = "(" + badDocs.map(pmid => pmid + "[PMID]").join(' OR ') + ")";
+     var thesebads = "https://www.ncbi.nlm.nih.gov/pubmed?term=" + badstring;
+     $("#startsearch").append('<td style="width:15%"><a href="' + thesebads + '" target="_pubmedsearch">' + bad + " (" + badratio + ")</td>");
    }
 
    function writeVarResults(search, searchtotal, totalscreened, good, bad) {
      $("#variantperformance").append("<tr>");
-     $("#variantperformance tr:last").append("<td style='width:40%'>" + search + "</td>");
+     $("#variantperformance tr:last").append("<td>" + search + "</td>");
      var mysearchstr = "https://www.ncbi.nlm.nih.gov/pubmed?term=" + search;
-     $("#variantperformance tr:last").append('<td style="width:15%"><a href="' + mysearchstr + '" target="_pubmedsearch">' + searchtotal + '</a></td>');
-     $("#variantperformance tr:last").append("<td style='width:15%'>" + totalscreened + "</td>");
-     var goodratio = round(good/totalscreened, 3) || 0;
-     $("#variantperformance tr:last").append("<td style='width:15%'>" + good + " (" + goodratio + ")</td>");
-     var badratio = round(bad/totalscreened, 3) || 0;
-     $("#variantperformance tr:last").append("<td style='width:15%'>" + bad + " (" + badratio + ")</td>");
+     $("#variantperformance tr:last").append('<td><a href="' + mysearchstr + '" target="_pubmedsearch">' + searchtotal + '</a></td>');
+     var goodstring = "(" + goodDocs.map(pmid => pmid + "[PMID]").join(' OR ') + ")";
+     var thesegoods = "https://www.ncbi.nlm.nih.gov/pubmed?term=" + search + " AND " + goodstring;
+     $("#variantperformance tr:last").append('<td><a href="' + thesegoods + '" target="_pubmedsearch">' + good + "</a></td>");
+     var numbermissed = searches["start"].good - good;
+     var thesemissed = "https://www.ncbi.nlm.nih.gov/pubmed?term=" + goodstring + " NOT " + search;
+     $("#variantperformance tr:last").append('<td><a href="' + thesemissed + '" target="_pubmedsearch">' + numbermissed + "</a></td>");
+     var sensitivty = round(good/searches["start"].good, 3) || 0;
+     $("#variantperformance tr:last").append("<td>" + sensitivty + "</td>");
+     var badstring = "(" + badDocs.map(pmid => pmid + "[PMID]").join(' OR ') + ")";
+     var thesebads = "https://www.ncbi.nlm.nih.gov/pubmed?term=" + search + " AND " + badstring;
+     $("#variantperformance tr:last").append('<td><a href="' + thesebads + '" target="_pubmedsearch">' + bad + "</a></td>");
+     var precision = round(good/totalscreened, 3) || 0;
+     $("#variantperformance tr:last").append("<td>" + precision + "</td>");
    }
 
    function polulateLists(pmid, status) {
@@ -613,7 +664,18 @@
        skipDocs.push(pmid);
        listname = "skippedlist";
      }
-     $("#" + listname).append('<li data-pmid=' + pmid + '>' + startDocs[pmid].title  + "</li>");
+     var mylist = "#" + listname;
+     var myDoc = startDocs[pmid];
+     $(mylist).append('<div class="card listarticle" id=' + pmid + ' >');
+     $("#" + pmid).append('<div class="card-body">');
+     $("#" + pmid + " .card-body").append('<div class="card-title">' + myDoc.title + '</div>');
+     var citestring = '<em>' + myDoc.journalAbbreviation + '</em>. ' + formatIssuestring(myDoc);
+     var myauthorstring = formatAuthorstring( myDoc.authors, 2);
+     if (myauthorstring.trim().length != 0 ) {
+       citestring = myauthorstring+ '. ' + citestring;
+     }
+     $("#" + pmid + " .card-body").append('<div class="card-subtitle mb-2 text-muted">' + citestring  + '</div>');
+     //$(mylist + " .card .card-body").last().append('<a href="#" class="card-link">' + pmid + '</a>')
    }
 
   function getRandomIntInclusive(min, max) {
