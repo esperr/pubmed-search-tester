@@ -613,7 +613,7 @@
 
    function writeResults(search, searchtotal, totalscreened, good, bad) {
      $("#initialsearchperformance").append("<tr id='startsearch'>");
-     $("#startsearch").append("<td style='width:40%'>" + search + "</td>");
+     $("#startsearch").append("<td style='width:30%'>" + search + "</td>");
      var mysearchstr = "https://www.ncbi.nlm.nih.gov/pubmed?term=" + search;
      $("#startsearch").append('<td style="width:15%"><a href="' + mysearchstr + '" target="_pubmedsearch">' + searchtotal + '</a></td>');
      $("#startsearch").append("<td style='width:15%'>" + totalscreened + "</td>");
@@ -636,14 +636,14 @@
      var thesegoods = "https://www.ncbi.nlm.nih.gov/pubmed?term=" + search + " AND " + goodstring;
      $("#variantperformance tr:last").append('<td><a href="' + thesegoods + '" target="_pubmedsearch">' + good + "</a></td>");
      var numbermissed = searches["start"].good - good;
-     var thesemissed = "https://www.ncbi.nlm.nih.gov/pubmed?term=" + goodstring + " NOT " + search;
+     var thesemissed = "https://www.ncbi.nlm.nih.gov/pubmed?term=" + goodstring + " NOT " + "(" + search + ")";
      $("#variantperformance tr:last").append('<td><a href="' + thesemissed + '" target="_pubmedsearch">' + numbermissed + "</a></td>");
      var sensitivty = round(good/searches["start"].good, 3) || 0;
      $("#variantperformance tr:last").append("<td>" + sensitivty + "</td>");
      var badstring = "(" + badDocs.map(pmid => pmid + "[PMID]").join(' OR ') + ")";
-     var thesebads = "https://www.ncbi.nlm.nih.gov/pubmed?term=" + search + " AND " + badstring;
+     var thesebads = "https://www.ncbi.nlm.nih.gov/pubmed?term=" + search + " AND " + "(" + badstring + ")";
      $("#variantperformance tr:last").append('<td><a href="' + thesebads + '" target="_pubmedsearch">' + bad + "</a></td>");
-     var precision = round(good/totalscreened, 3) || 0;
+     var precision = round(good/(good + bad), 3) || 0;
      $("#variantperformance tr:last").append("<td>" + precision + "</td>");
    }
 
