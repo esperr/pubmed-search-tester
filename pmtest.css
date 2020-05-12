@@ -1,9 +1,10 @@
 
 #topbanner {
   background-color: #e0ecff;
-  padding-top: 5em;
+  padding-top: 1em;
   padding-bottom: 1em;
   }
+
 
 .searchword:hover  {
   background-color: gold;
@@ -58,4 +59,10 @@
 
 #currentstatus {
   font-weight: 600;
+}
+
+#searchused {
+  color: gray;
+  font-size: .9em;
+  margin: 1em;
 }
