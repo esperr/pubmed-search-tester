@@ -271,7 +271,7 @@
     rubric:"<p>Find items on the <strong>diagnosis</strong> of <strong>COVID-19</strong>.</p> \
     <p><strong>Select</strong> those articles that describe diagnostic tests or techniques. \
     </p><p><strong>Reject</strong> items that are <em>primarily</em> about treatment, epidemiology, etc. or which focus on coronavirus diseases other than COVID-19.</p>"},
-    {search: "coronary artery disease AND statin AND 'Clinical trial'[PT]",
+    {search: 'coronary artery disease AND statin AND "Clinical trial"[PT]',
     rubric: "<p>Find <strong>clinical trials</strong> about the use of <strong>statins</strong> to treat <strong>coronary artery disease</strong>.</p> \
     <p><strong>Select</strong> those articles that appear to describe a discrete clinical trial on the safety or efficacy of statins in this context. \
     </p><p><strong>Reject</strong> opinion pieces or reviews of multiple trials. Also reject any items concerning statins in contexts or disorders \
@@ -573,13 +573,17 @@
      var elapsedtime = endtime - starttime;
      //alert("done!");
      var searchstr = testsearches[currenttest].search;
-     //postResults(searchstr, elapsedtime, goodDocs, badDocs, skipDocs);
+     postResults(searchstr, elapsedtime, goodDocs, badDocs, skipDocs);
      //currenttest = currenttest + 1;
      testsearches.splice(currenttest,1);
      console.log(testsearches);
      if (testsearches.length < 1) {
        $("#lists").hide();
-       $("#thanks").modal();
+       $("#thanks").modal(
+         {
+            backdrop: 'static',
+            keyboard: false
+        });
      } else {
        //var startDocs = {};
        for (doc in startDocs) {
@@ -592,7 +596,11 @@
        currenttest = getRandomIntInclusive(0, testsearches.length-1);
        console.log(currenttest);
        $("#lists").hide();
-       $("#continuing").modal();
+       $("#continuing").modal(
+         {
+            backdrop: 'static',
+            keyboard: false
+        });
      }
    }
 
