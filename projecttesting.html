@@ -116,19 +116,19 @@
       <div class="row">
 
         <div class="col-md-4">
-          <h4>"Good" documents: <span id="goodnumber">0</h4>
+          <h4>"Good" documents: <span class="goodnumber">0</h4>
 
           <div id="goodlist">
           </div>
         </div>
         <div class="col-md-4">
-          <h4>"Bad" documents: <span id="badnumber">0</h4>
+          <h4>"Bad" documents: <span class="badnumber">0</h4>
 
           <div id="badlist">
           </div>
         </div>
         <div class="col-md-4">
-          <h4>Skipped documents: <span id="skipnumber">0</h4>
+          <h4>Skipped documents: <span class="skipnumber">0</h4>
 
           <div id="skippedlist">
           </div>
@@ -142,7 +142,8 @@
       <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">Curent status: <span id="currentstatus"></span></h4>
+            <h4 class="modal-title">Current status: <span id="currentstatus"></span></h4>
+            <div id="totalsbug">Totals: <span class="goodnumber"></span> | <span class="badnumber"></span> | <span class="skipnumber"></span></div>
           </div>
           <div id="doc-display" class="modal-body">
           </div>
@@ -370,9 +371,9 @@
      $( "#goodlist" ).empty();
      $( "#badlist" ).empty();
      $( "#skippedlist" ).empty();
-     $("#goodnumber").text("0");
-     $("#badnumber").text("0");
-     $("#skipnumber").text("0");
+     $(".goodnumber").text("0");
+     $(".badnumber").text("0");
+     $(".skipnumber").text("0");
      $("#results").hide();
      $("#mainsearch").show();
      $( "#rubric" ).empty();
@@ -530,10 +531,10 @@
      for (var i=0; i<pmids.length; i++) {
        polulateLists(pmids[i], startDocs[pmids[i]].sortstatus);
      }
-     $("#mehnumber").text(sieveDocs.length);
-     $("#goodnumber").text(goodDocs.length);
-     $("#badnumber").text(badDocs.length);
-     $("#skipnumber").text(skipDocs.length);
+     $(".mehnumber").text(sieveDocs.length);
+     $(".goodnumber").text(goodDocs.length);
+     $(".badnumber").text(badDocs.length);
+     $(".skipnumber").text(skipDocs.length);
    }
 
 

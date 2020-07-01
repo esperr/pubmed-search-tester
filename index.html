@@ -118,7 +118,7 @@
           </div>
         </div>-->
         <div class="col-md-4">
-          <h4>"Good" documents: <span id="goodnumber">0</h4>
+          <h4>"Good" documents: <span class="goodnumber">0</h4>
             <!--<a data-toggle="collapse" href="#goodlist" aria-expanded="false" aria-controls="collapseExample">
               Show all
             </a>-->
@@ -126,7 +126,7 @@
           </div>
         </div>
         <div class="col-md-4">
-          <h4>"Bad" documents: <span id="badnumber">0</h4>
+          <h4>"Bad" documents: <span class="badnumber">0</h4>
             <!--<a data-toggle="collapse" href="#badlist" aria-expanded="false" aria-controls="collapseExample">
               Show all
             </a>-->
@@ -134,7 +134,7 @@
           </div>
         </div>
         <div class="col-md-4">
-          <h4>Skipped documents: <span id="skipnumber">0</h4>
+          <h4>Skipped documents: <span class="skipnumber">0</h4>
             <!--<a data-toggle="collapse" href="#skippedlist" aria-expanded="false" aria-controls="collapseExample">
               Show all
             </a>-->
@@ -196,7 +196,8 @@
       <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h4 class="modal-title">Curent status: <span id="currentstatus"></span></h4>
+            <h4 class="modal-title">Current status: <span id="currentstatus"></span></h4>
+            <div id="totalsbug">Totals: <span class="goodnumber">0</span> | <span class="badnumber">0</span> | <span class="skipnumber">0</span></div>
           </div>
           <div id="doc-display" class="modal-body">
           </div>
@@ -478,8 +479,8 @@
 
    function getDoc(numrequired) {
      var indexes = [];
-     var currentmeh = Number($("#mehnumber").text());
-     $("#mehnumber").text(currentmeh + numrequired);
+     var currentmeh = Number($(".mehnumber").text());
+     $(".mehnumber").text(currentmeh + numrequired);
      for (i = 0; i < numrequired; i++) {
        var index = getRandomIntInclusive(1, startCount);
        indexes.push(index);
@@ -605,10 +606,10 @@
      for (var i=0; i<pmids.length; i++) {
        polulateLists(pmids[i], startDocs[pmids[i]].sortstatus);
      }
-     $("#mehnumber").text(sieveDocs.length);
-     $("#goodnumber").text(goodDocs.length);
-     $("#badnumber").text(badDocs.length);
-     $("#skipnumber").text(skipDocs.length);
+     $(".mehnumber").text(sieveDocs.length);
+     $(".goodnumber").text(goodDocs.length);
+     $(".badnumber").text(badDocs.length);
+     $(".skipnumber").text(skipDocs.length);
    }
 
    function writeResults(search, searchtotal, totalscreened, good, bad) {

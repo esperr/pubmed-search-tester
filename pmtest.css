@@ -61,6 +61,19 @@
   font-weight: 600;
 }
 
+#totalsbug .goodnumber {
+  color: green;
+}
+
+#totalsbug .badnumber {
+  color: red;
+}
+
+#totalsbug .skipnumber {
+  color: grey;
+}
+
+
 #searchused {
   color: gray;
   font-size: .9em;
