@@ -5,6 +5,9 @@
   padding-bottom: 1em;
   }
 
+#about {
+  float: right;
+}
 
 .searchword:hover  {
   background-color: gold;
